@@ -1,4 +1,3 @@
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import { Link } from 'react-router-dom';
 import { BsInfoCircle } from 'react-icons/bs';
 import { FaShoppingCart } from 'react-icons/fa';
@@ -7,7 +6,6 @@ import React, { useState, useEffect } from 'react';
 import "./Assets/Product.css"
 
 const Visitor = () => {
-    const location = useLocation();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -17,21 +15,16 @@ const Visitor = () => {
     const handleProductClick = (product) => {
         setSelectedProduct(product);
     };
-    const calculateTotalPrice = () => {
-        const totalPrice = cart.reduce((total, item) => total + item.price, 0);
-        return totalPrice.toFixed(2);
-    };
 
-
-    const calculateTotalItems = () => {
-        return cart.length;
-    };
 
     const userstyle = {
         display: "flex",
-        justifyContent: "space-between",
-        width: "90%",
-        margin: "1rem auto"
+        justifyContent: "space-around",
+        width: "100%",
+        alignItems: "center",
+        position: "sticky",
+        zIndex: "10",
+        backgroundColor: "white"
     }
 
 
@@ -48,27 +41,114 @@ const Visitor = () => {
             });
     }, []);
 
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [itemsToDisplay, setItemsToDisplay] = useState(true);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const filterProductsByCategory = (products) => {
+        if (selectedCategory === 'All') {
+            return products;
+        }
+        return products.filter((product) => product.category === selectedCategory);
+    };
+
+    useEffect(() => {
+        fetch('https://fakestoreapi.com/products')
+            .then((response) => response.json())
+            .then((data) => {
+                const filteredProducts = filterProductsByCategory(data);
+                const sortedProducts = sortProductsByPrice(filteredProducts);
+                const searchedProducts = filterProductsBySearchTerm(sortedProducts);
+                setData(searchedProducts);
+                setItemsToDisplay(searchedProducts.length > 0);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+                setLoading(false);
+            });
+    }, [selectedCategory, sortOrder, searchTerm]);
+
+
+    const handleCategoryChange = (e) => {
+        setSelectedCategory(e.target.value);
+    };
+
+    const sortProductsByPrice = (products) => {
+        return products.slice().sort((a, b) => {
+            const priceA = parseFloat(a.price);
+            const priceB = parseFloat(b.price);
+
+            if (sortOrder === 'asc') {
+                return priceA - priceB;
+            } else {
+                return priceB - priceA;
+            }
+        });
+    };
+    const handleSortOrderChange = (e) => {
+        setSortOrder(e.target.value);
+    };
+
+
+    const filterProductsBySearchTerm = (products) => {
+        return products.filter((product) =>
+            product.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    };
+
+    const handleSearchTermChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+
+
     return (
         <div>
             {loading ? (<p>Loading...</p>) : (
                 <>
+                    <div className="masterfilter">
 
-                    <div style={userstyle}>
-                        <Link to="/" style={{ backgroundColor: "#3c009d", color: "white", height: "fit-content", padding: ".4rem 1rem", fontWeight: "bold" }}>Sign In to Add cart</Link>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <div style={{ backgroundColor: "#3c009d", textTransform: "capitalize", padding: "1rem", borderRadius: "50%", height: "3rem", width: "3rem", textAlign: "center" }}>
+                        <div className="filterdiv">
+                            <div className='filter1'>
+                                <label htmlFor="dropdown">Filter Products by:</label>
+                                <select id="dropdown" value={selectedCategory} onChange={handleCategoryChange}>
+                                    <option value="All">All</option>
+                                    <option value="men's clothing">Men's Clothing</option>
+                                    <option value="women's clothing">Women's Clothing</option>
+                                </select>
+                            </div>
 
+                            <div className='filter1'>
+                                <label htmlFor="sortOrderDropdown">Sort by Price:</label>
+                                <select id="sortOrderDropdown" value={sortOrder} onChange={handleSortOrderChange}>
+                                    <option value="asc">Lowest to Highest</option>
+                                    <option value="desc">Highest to Lowest</option>
+                                </select>
+                            </div>
+
+                            <div className='searchdiv'>
+                                <label htmlFor="searchBar">Search Product</label>
+                                <input
+                                    type="text"
+                                    id="searchBar"
+                                    value={searchTerm}
+                                    onChange={handleSearchTermChange}
+                                    placeholder="Search..."
+                                />
                             </div>
                         </div>
+                        <div style={userstyle}>
+                            <Link to="/" style={{ backgroundColor: "white", color: "#3c009d", height: "fit-content", padding: ".4rem 1rem", fontWeight: "bold" }}>Sign In to Add cart</Link>
+                        </div>
                     </div>
-                    <button onClick={() => setShowCart(!showCart)} style={{ marginLeft: "2rem", position: "fixed", top: "100px" }}> <div style={{ fontWeight: "bold" }}>View Cart</div>
+                    <button onClick={() => setShowCart(!showCart)} style={{ marginLeft: "5rem", position: "fixed", bottom: "0", zIndex: "999999999999" }}> <div style={{ fontWeight: "bold" }}>View Cart</div>
                         {showCart ? (<FaShoppingCart style={{ fontSize: "3rem" }} />) : (
                             <>
                                 <div className="cart-icon-container">
                                     <FaShoppingCart style={{ fontSize: '3rem' }} />
-                                    {calculateTotalItems() > 0 && (
-                                        <span className="cart-item-count">{calculateTotalItems()}</span>
-                                    )}
+
                                 </div>
 
                             </>
@@ -76,7 +156,7 @@ const Visitor = () => {
                     </button>
 
                     <div className="products">
-                        {data.map((product) => (
+                        {itemsToDisplay ? (data.map((product) => (
                             <div key={product.id} className="product-card" >
                                 <div onClick={() => handleProductClick(product)} className="product-info" ><BsInfoCircle className="info-icon" /></div>
                                 <img src={product.image} alt={product.title} className="product-image" />
@@ -85,7 +165,7 @@ const Visitor = () => {
                                     <p style={{ fontWeight: "bold", margin: "1rem 0" }}>Price: ${product.price}</p>
                                 </div>
                             </div>
-                        ))}
+                        ))) : (<p>No item to display</p>)}
                     </div>
 
                     {selectedProduct && (
@@ -121,7 +201,7 @@ const Visitor = () => {
                                     </li>
                                 ))}
                             </ul>
-                            <p><span style={{ fontWeight: "bold" }}>Total Price:</span> ${calculateTotalPrice()}</p>
+                            <p><span style={{ fontWeight: "bold" }}>Total Price:</span> $0</p>
                             <Link to="/">
                                 <div style={{ backgroundColor: "#3c009d", color: "white", padding: ".3rem 1rem", textAlign: "center", fontWeight: "bold", margin: "2rem 0", cursor: "pointer" }}>Sign in to Add Cart</div>
                             </Link>

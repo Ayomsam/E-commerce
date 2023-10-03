@@ -76,7 +76,7 @@
     background-color: white;
     padding: 20px;
     box-shadow: 5px 20px 10px 8px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: 9999999;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -102,7 +102,7 @@
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
     padding: 20px;
     overflow-y: auto;
-    z-index: 999;
+    z-index: 99999999;
 }
 
 .sidelist {
@@ -136,4 +136,49 @@
 
 .popuphide:hover {
     background-color: #cc0000;
+}
+
+.filterdiv {
+    padding: 1rem;
+    width: 100%;
+    background-color: #3c009d;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.searchdiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.masterfilter label {
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+}
+
+.masterfilter {
+    width: fit-content;
+    top: 0;
+    z-index: 999999;
+    width: 100%;
+    position: sticky;
+    overflow-x: hidden;
+}
+
+.filter1,
+.searchdiv {
+    display: flex;
+    flex-direction: column;
+}
+
+select,
+#searchBar {
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    outline: none;
+    border: none;
 }
