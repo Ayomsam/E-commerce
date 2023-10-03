@@ -1,0 +1,139 @@
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem 5rem 5rem 5rem;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    width: 17rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    padding: 1rem;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    justify-content: space-between;
+}
+
+.reviewdiv {
+    width: 100%;
+}
+
+@media screen and (max-width: 350px) {
+    .product-card {
+        width: 200px;
+    }
+}
+
+.product-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+
+.info-icon {
+    font-size: 20px;
+}
+
+.cart-item-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 8px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.cart-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.product-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.product-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 5px 20px 10px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    width: 85%;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 350px) {
+    .product-popup {
+        width: 100%;
+    }
+}
+
+.cart-popup {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.sidelist {
+    border-bottom: 3px solid #3c009d;
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 2px 2px;
+}
+
+.deletebtn {
+    background-color: red;
+    color: white;
+    padding: .3rem .6rem;
+    outline: none;
+    border: none;
+    font-weight: bold;
+}
+
+.popuphide {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    padding: .3rem 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    position: fixed;
+    top: 15px;
+}
+
+.popuphide:hover {
+    background-color: #cc0000;
+}
