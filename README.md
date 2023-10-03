@@ -1,4 +1,7 @@
 # Getting Started with Create React App
+# E-commerce-Project
+
+This project is a developed E-commerce web app as a Capstone Project for Fullstack Academy
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
